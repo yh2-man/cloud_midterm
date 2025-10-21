@@ -5,9 +5,9 @@ services:
       dockerfile: api/Dockerfile
     volumes:
       - ./data:/app/data
-    # 필요시 헬스체크 추가
-    # expose:
-    #   - "5000"
+    # api 서비스가 내부 네트워크 포트 5000으로 접근 가능하도록 노출합니다.
+    expose:
+      - "5000"
 
   web:
     image: nginx:1.25
@@ -16,3 +16,7 @@ services:
     volumes:
       - ./nginx/html:/usr/share/nginx/html:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    # web 서비스가 api 서비스에 의존함을 명시합니다. 
+    # Nginx가 프록시를 시작할 때 api 서비스가 사용 가능하게 합니다.
+    depends_on:
+      - api
